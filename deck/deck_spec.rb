@@ -35,7 +35,7 @@ RSpec.describe Deck do
 
   it 'pops off stack when card is dealt' do 
     #shuffle deck, and pop card off the end of the deck = dealt card
-    dealt_card = @deck.shuffle.deal_card
+    dealt_card = @deck.shuffle.last
 		expect(@deck.deal_card).to eq(dealt_card)
   end
   
