@@ -15,7 +15,14 @@ class Card
       @suit = 'unknown'
       @rank = 'unkown'
     end
+  end
 
+  def to_s
+    if show
+      "#{rank} of #{suit}."
+    else
+      "Card is face down right now."
+    end
   end
 
 end

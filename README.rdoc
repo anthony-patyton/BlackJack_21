@@ -5,3 +5,12 @@ Blackjack - tdd, and oop
 
 classes
 hand, card, deck
+
+deck class
+- 52 cards, each cars has a suit and rank
+- shuffle
+- deal
+- replace the deck (replace _with)
+- deck 
+- suits
+- ranks
