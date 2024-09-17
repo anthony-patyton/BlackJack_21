@@ -14,9 +14,7 @@ RSpec.describe Deck do
   end
 
   it 'should respond to ranks' do
-    expect(@deck).to respond_to(:ranks)
-  end
-
+    expect(@deck).to respond_to(:ranks) end
   it 'should respond to deck' do
     expect(@deck).to respond_to(:deck)
   end
@@ -36,15 +34,19 @@ RSpec.describe Deck do
   it 'pops off stack when card is dealt' do 
     #shuffle deck, and pop card off the end of the deck = dealt card
     dealt_card = @deck.shuffle.last
-		expect(@deck.deal_card).to eq(dealt_card)
+	expect(@deck.deal_card).to eq(dealt_card)
   end
   
-	it 'the dealt card cannot be nil' do
-		expect(@deck.deal_card).to_not eq(nil)
-	end
+  it 'the dealt card cannot be nil' do
+    expect(@deck.deal_card).to_not eq(nil)
+  end
 
-	it 'gets a new deck with replace_with' do
-
-	end
-
+  it 'gets a new deck with replace_with' do
+    deck_of_cards = []
+    deck_of_cards.push(Card.new("Hearts", "8"))
+    deck_of_cards.push(Card.new("Hearts", "9"))
+    new_deck = @deck.dup
+    new_deck.replace_with(deck_of_cards)
+    expect(@deck.deck).to_not eq(new_deck.deck)
+  end
 end
