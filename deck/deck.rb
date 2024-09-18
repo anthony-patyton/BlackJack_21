@@ -33,7 +33,11 @@ class Deck
   end
 
   def add_deck number_of_decks
-    added_decks = create_deck * number_of_decks
+    added_decks = 0
+    while added_decks < number_of_decks
+      create_deck 
+      added_decks += 1
+    end
   end
 
   private
