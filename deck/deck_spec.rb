@@ -14,7 +14,9 @@ RSpec.describe Deck do
   end
 
   it 'should respond to ranks' do
-    expect(@deck).to respond_to(:ranks) end
+    expect(@deck).to respond_to(:ranks)
+  end
+
   it 'should respond to deck' do
     expect(@deck).to respond_to(:deck)
   end
@@ -41,12 +43,23 @@ RSpec.describe Deck do
     expect(@deck.deal_card).to_not eq(nil)
   end
 
-  it 'gets a new deck with replace_with' do
+  it 'gets a new deck with replace_with' do # this should replace the deck with a new deck
     deck_of_cards = []
     deck_of_cards.push(Card.new("Hearts", "8"))
     deck_of_cards.push(Card.new("Hearts", "9"))
     new_deck = @deck.dup
     new_deck.replace_with(deck_of_cards)
     expect(@deck.deck).to_not eq(new_deck.deck)
+  end
+  
+  it 'should respond to add_deck' do
+    expect(@deck).to respond_to(:add_deck)
+  end
+
+  it 'should have another deck' do
+    # @deck.cards = 52 => set that number of decks = 1
+    one_deck = @deck.deck.count 
+    @deck.add_deck(1)
+    expect(@deck.deck.count).to_not eq(one_deck)
   end
 end
