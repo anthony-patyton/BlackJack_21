@@ -19,9 +19,9 @@ class Card
 
   def to_s
     if show
-      "#{rank} of #{suit}."
+      "#{rank} of #{suit}"
     else
-      "Card is face down right now."
+      ""
     end
   end
 

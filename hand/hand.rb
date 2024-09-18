@@ -28,15 +28,41 @@ class Hand
   end
 
   def get_value
-    card_ranks = []
-    result = 0
-    @dealt_cards.each do |card|
-      card_ranks << card.rank
-    end
-    card_ranks.each do |rank|
-      # rank = rank.to_s #just learned that this line does nothing. It already will look look the VALUES{} for a key with '8'. Newer syntax I think
-      result += VALUES[rank]
+    card_ranks = @dealt_cards.map { |card| card.rank} # replaces 4 lines of code
+    result = card_ranks.reduce(0) { |acc, rank| acc + VALUES[rank]} #replaces the card_ranks method
+    if card_ranks.include?('Ace') && dealt_cards.first.show 
+      result += 10 if result + 10 <= 21 # add 10 to the result if reuslt + 10 <= 21
+    elsif card_ranks.include?('10') && dealt_cards.last.show == false
+      result = 21
+    else
     end
     result
   end
+
+  def to_s
+    report = ""
+    dealt_cards.each {|card| report += card.to_s + ", "  if card.show}
+
+    if dealt_cards.first.show == false
+      first_value = VALUES[@dealt_cards.first.rank]
+      report + "Total Value: " + (get_value - first_value).to_s
+    elsif dealt_cards.last.show == false
+      report + "Ace of #{@dealt_cards.last.suit}, " + "Total Value: " + get_value.to_s
+    else
+      report + "Total Value: " + get_value.to_s
+    end
+  end
 end
+
+# Phantom arrays 
+# reduce(&:+)
+  # card_ranks = []
+  # result = 0
+  # @dealt_cards.each do |card|
+  #   card_ranks << card.rank
+  # end
+  # card_ranks.each do |rank|
+  #   # rank = rank.to_s #just learned that this line does nothing. It already will look look the VALUES{} for a key with '8'. Newer syntax I think
+  #   result += VALUES[rank]
+  # end
+  # result

@@ -40,15 +40,21 @@ RSpec.describe Hand do
     end
 
     it 'returns correct value with no Ace' do
-    card1 = Card.new('Hearts', '8')
-    card2 = Card.new('Clubs', '7')
+      card1 = Card.new('Hearts', '8')
+      card2 = Card.new('Clubs', '7')
 
-    @hand.add_card(card1)
-    @hand.add_card(card2)
-    expect(@hand.get_value).to eq(15)
+      @hand.add_card(card1)
+      @hand.add_card(card2)
+      expect(@hand.get_value).to eq(15)
     end
    
     it 'returns correct value with Ace and a jack' do
+      card1 = Card.new('Hearts', '8')
+      card2 = Card.new('Clubs', 'Ace')
+
+      @hand.add_card(card1)
+      @hand.add_card(card2)
+      expect(@hand.get_value).to eq(19)
     end
 
   end
@@ -56,11 +62,29 @@ RSpec.describe Hand do
   describe 'hand output' do
 
     it 'returns the correct output if show is true for all cards' do
+      card1 = Card.new('Hearts', '8')
+      card2 = Card.new('Clubs', '7')
+      @hand.add_card(card1)
+      @hand.add_card(card2)
+      expect("#{@hand}").to eq("8 of Hearts, 7 of Clubs, Total Value: 15")
     end
 
     it 'returns the correct output if show is false for one card' do
+      card1 = Card.new('Hearts', 'Ace')
+      card2 = Card.new('Clubs', '7')
+      card1.show = false
+      @hand.add_card(card1)
+      @hand.add_card(card2)
+      expect("#{@hand}").to eq("7 of Clubs, Total Value: 7")
     end
 
+    it 'returns the correct output if show is false for the second card' do
+      card1 = Card.new('Hearts', 'Jack')
+      card2 = Card.new('Clubs', 'Ace')
+      card2.show = false
+      @hand.add_card(card1)
+      @hand.add_card(card2)
+      expect("#{@hand}").to eq("Jack of Hearts, Ace of Clubs, Total Value: 21")
+    end
   end
-
 end
