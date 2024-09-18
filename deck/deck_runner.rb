@@ -15,7 +15,6 @@ puts '--------inital deck-------'
 puts deck.deck
 puts "----Added 2 decks-------"
 deck.add_deck(2)
-number of decks added
 puts deck.deck
 
 puts "--------Dealt Card--------"
@@ -26,7 +25,7 @@ new_deck = []
 new_deck.push(Card.new("Hearts", "8"))
 new_deck.push(Card.new("Hearts", "9"))
 new_deck.push(Card.new("Hearts", "10"))
-# puts new_deck.class
+puts new_deck.class
 puts new_deck
 
 puts "--------Deck has Been Replaced----------"
@@ -34,3 +33,4 @@ deck.replace_with(new_deck)
 puts deck.deck
 puts deck.shuffle
 puts deck.deal_card
+puts deck.class #notice how the deck is replaced with an Array object to Deck

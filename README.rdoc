@@ -14,3 +14,10 @@ deck class
 - deck 
 - suits
 - ranks
+
+hand class
+- Give us the card thats dealt
+- player and dealer get a hand
+- have a method to add cards to array
+- method that gets the total value of players and dealers dealt cards
+- need to be able to get and output showing the details of each card dealt and the total value
