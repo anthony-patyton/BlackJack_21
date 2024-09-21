@@ -32,9 +32,6 @@ class Hand
     result = card_ranks.reduce(0) { |acc, rank| acc + VALUES[rank]} #replaces the card_ranks method
     if card_ranks.include?('Ace') && dealt_cards.first.show 
       result += 10 if result + 10 <= 21 # add 10 to the result if reuslt + 10 <= 21
-    elsif card_ranks.include?('10') && dealt_cards.last.show == false
-      result = 21
-    else
     end
     result
   end
@@ -46,8 +43,6 @@ class Hand
     if dealt_cards.first.show == false
       first_value = VALUES[@dealt_cards.first.rank]
       report + "Total Value: " + (get_value - first_value).to_s
-    elsif dealt_cards.last.show == false
-      report + "Ace of #{@dealt_cards.last.suit}, " + "Total Value: " + get_value.to_s
     else
       report + "Total Value: " + get_value.to_s
     end
