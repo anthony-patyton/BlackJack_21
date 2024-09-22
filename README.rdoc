@@ -1,4 +1,3 @@
-
 Blackjack - tdd, and oop
 
 21 -
@@ -21,3 +20,16 @@ hand class
 - have a method to add cards to array
 - method that gets the total value of players and dealers dealt cards
 - need to be able to get and output showing the details of each card dealt and the total value
+
+blackjack class
+- Player hand
+- Dealer hand
+- Playing -wethe or not the game is being played
+- deck
+- Current gamer --> access required
+
+- Deal
+- hit
+- stand = can close out hand
+- show hands, report hand of Player and Dealer
+- set result

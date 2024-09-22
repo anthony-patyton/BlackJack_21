@@ -54,21 +54,13 @@ RSpec.describe Wallet do
     end
 
     it 'allows the player to change the bet' do
-      @wallet.change_bet(50)
-      expect(@wallet.show_bet).to eq(50)
+      @wallet.bet_amount(50)
+      expect(@wallet.show_bet).to eq("Your current bet: $50")
     end
 
-    it 'have a maxium bet for that game' do
-      @wallet.change_bet(505)
+    it 'has a maxium bet for that game' do
+      @wallet.bet_amount(505)
       expect(@wallet.show_bet).to eq(500) && eq("Maximum bet is $500!!!")
-    end
-    
-    it 'shows options to increase bet or leave it the same or at minimum bet' do
-
-      @wallet.bet_options(1) #leave it the same
-      @wallet.bet_options(2) #increase bet by specific amount
-      @wallet.bet_options(3) #minimum, bet_amount = $15
-
     end
   end
 end

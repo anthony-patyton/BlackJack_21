@@ -23,21 +23,20 @@ class Wallet
   end
 
   def bet_amount num
-    if num % 5 == 0 
-      if num < 15
-        @bet = MINIMUM_BETS[0]
-      else num >= 15
-        @bet = num.to_i
-      end
-    else
-      "Can only have bets of $5 or higher"
+    if num % 5 == 0 && num <= MINIMUM_BETS.last
+      @bet = num < 15 ? MINIMUM_BETS.first : num.to_i
+    else num >= MINIMUM_BETS.last
+      @bet = MINIMUM_BETS.last
     end
   end
 
   def show_bet 
-    "Your current bet: $#{@bet}"
-  end
-
-  def change_bet
+    if @bet < MINIMUM_BETS.last
+      "Your current bet: $#{@bet}"
+    elsif @bet >= MINIMUM_BETS.last
+      "Maximum bet is $#{MINIMUM_BETS.last}!!!"
+    else
+      "Your bet can only be increased by $5"
+    end
   end
 end
