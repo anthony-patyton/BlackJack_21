@@ -56,7 +56,7 @@ RSpec.describe Deck do
     expect(@deck).to respond_to(:add_deck)
   end
 
-  it 'should have another deck' do
+  it 'should add a deck' do
     # @deck.cards = 52 => set that number of decks = 1
     one_deck = @deck.deck.count 
     @deck.add_deck(1)

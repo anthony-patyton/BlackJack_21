@@ -1,5 +1,4 @@
 require_relative '../card/card'
-require 'pry'
 
 class Deck
   attr_reader :deck, :suits, :ranks
@@ -8,8 +7,8 @@ class Deck
 
   def initialize suits, ranks
     @deck = []
-    @suits = suits
-    @ranks = ranks
+    @suits = SUITS
+    @ranks = RANKS
     create_deck
   end  
 	

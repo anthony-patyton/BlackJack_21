@@ -1,5 +1,4 @@
 require 'pry'
-
 class Hand
   attr_accessor :dealt_cards
 

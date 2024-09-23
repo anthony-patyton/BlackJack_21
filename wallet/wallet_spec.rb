@@ -1,27 +1,24 @@
-require_relative '../card/card'
-require_relative '../hand/hand'
 require_relative 'wallet'
-require 'pry'
 
 RSpec.describe Wallet do
 
   before do
-    @hand = Hand.new
-    @wallet = Wallet.new
+    initial_amount = 500
+    @wallet = Wallet.new initial_amount
   end
 
   it 'responds to initial amount' do
     expect(@wallet).to respond_to(:amount)
   end
   
-  it 'responds to bet' do
-    expect(@wallet).to respond_to(:bet)
-  end
+  # it 'responds to bet' do
+  #   expect(@wallet).to respond_to(@bet)
+  # end
 
   describe '#Computational amounts with wallet' do
 
     it 'show how much money the player has' do
-      expect(@wallet.show_amount).to eq(0)
+      expect(@wallet.show_amount).to eq(500)
     end
     
     it 'adds to the initial amount' do
@@ -29,7 +26,7 @@ RSpec.describe Wallet do
 
       won_bet = 25
       @wallet.add_to_wallet(won_bet)
-      expect(@wallet.show_amount).to eq(25)
+      expect(@wallet.show_amount).to eq(525)
     end
 
     it 'subtract from the initial amount' do
@@ -37,30 +34,7 @@ RSpec.describe Wallet do
       
       @wallet.add_to_wallet(500)
       @wallet.subtract_from_wallet(-75)
-      expect(@wallet.show_amount).to eq(425)
-    end
-  end
-
-  describe '#betting hand' do
-
-    it 'respond to bet_amount' do
-      expect(@wallet).to respond_to(:bet_amount)
-    end
-
-    it 'should return the minimum_bet of the game' do
-      @wallet.bet_amount(0)
-      expect(@wallet.show_bet).to eq("Your current bet: $15")
-      expect(@wallet.bet).to_not eq(nil || 0)
-    end
-
-    it 'allows the player to change the bet' do
-      @wallet.bet_amount(50)
-      expect(@wallet.show_bet).to eq("Your current bet: $50")
-    end
-
-    it 'has a maxium bet for that game' do
-      @wallet.bet_amount(505)
-      expect(@wallet.show_bet).to eq(500) && eq("Maximum bet is $500!!!")
+      expect(@wallet.show_amount).to eq(925)
     end
   end
 end

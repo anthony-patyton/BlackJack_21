@@ -1,4 +1,3 @@
-
 class Card
   
   attr_accessor :suit, :rank, :show #allows access, first 3 pass 
