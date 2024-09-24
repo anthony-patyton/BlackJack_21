@@ -4,10 +4,9 @@ require_relative '../wallet/wallet'
 
 class Blackjack
 
-  attr_reader :player_hand, :dealer_hand, :deck, :playing
+  attr_reader :player_hand, :dealer_hand, :deck, :playing, :initial_amount
   attr_accessor :current_gamer, :change_bet, :bet, :wallet, :result
-  MINIMUM_BETS = [15, 25, 50, 500]
-
+  MINIMUM_BETS = [15, 25, 50, 500, 1000, 2500, 500000]
 
   def initialize suits, ranks, initial_amount
     @player_hand = nil
@@ -21,26 +20,7 @@ class Blackjack
     @result = ''
   end
 
-  def change_bet num
-    if num % 5 == 0 && num <= MINIMUM_BETS.last
-      @bet = num < 15 ? MINIMUM_BETS.first : num.to_i
-    else num >= MINIMUM_BETS.last
-      @bet = MINIMUM_BETS.last
-    end
-  end
-
-  def show_bet 
-    if @bet < MINIMUM_BETS.last
-      "Your current bet: $#{@bet}"
-    elsif @bet >= MINIMUM_BETS.last
-      "Maximum bet is $#{MINIMUM_BETS.last}!!!"
-    else
-      "Your bet can only be increased by $5"
-    end
-  end
-
   def deal
-    @wallet.amount = 500
     @wallet.subtract_from_wallet(@bet)
     @dealer_hand = Hand.new
     @player_hand = Hand.new
@@ -64,13 +44,22 @@ class Blackjack
     if playing
       if @current_gamer == 'Player'
         add_new_card @player_hand
-      elsif @current_gamer = 'Dealer'
+      elsif @current_gamer == 'Dealer'
         add_new_card @dealer_hand
       end
     end
   end
 
   def stand
+    if playing
+      if @current_gamer == 'Player'
+        @current_gamer = 'Dealer'
+        @dealer_hand.dealt_cards.first.show = true
+      end
+      if @dealer_hand.get_value < 17
+        hit
+      end
+    end
   end
 
   def show_hands
@@ -82,9 +71,13 @@ class Blackjack
   def split_cards
   end
 
+  def play_again
+  end
+
   def to_s
     puts "Player has #{@player_hand.get_value}"
     puts "Dealer has #{@dealer_hand.get_value}"
+    @wallet.show_amount
   end
 
   private #allow you to call another method inside a method of the same class
@@ -93,8 +86,15 @@ class Blackjack
     hand.add_card(@deck.deal_card)
 
     if hand.get_value > 21
-      @result = "#{@current_gamer} Busted"
-      @playing = false
+      if current_gamer == 'Dealer'
+        @result = "#{@current_gamer} Busted"
+        @wallet.add_to_wallet(@bet)
+        @wallet.show_amount
+        @playing = false
+      elsif 
+        @result = "#{@current_gamer} Busted. You lost #{@bet}"
+        @playing = false
+      end
     end
   end
 end
