@@ -13,7 +13,7 @@ class Wallet
   end
 
   def show_amount
-   "Wallet: $#{@amount}"
+    "Wallet: $#{@amount}"
     # @amount.reduce(&:+).to_i
   end
 

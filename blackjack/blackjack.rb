@@ -1,6 +1,8 @@
 require_relative '../deck/deck'
 require_relative '../hand/hand'
 require_relative '../wallet/wallet'
+require 'colorize'
+require 'colorized_string'
 
 class Blackjack
 
@@ -55,29 +57,39 @@ class Blackjack
       if @current_gamer == 'Player'
         @current_gamer = 'Dealer'
         @dealer_hand.dealt_cards.first.show = true
+        @playing = true
       end
-      if @dealer_hand.get_value < 17
+      if @dealer_hand.get_value <= 17
         hit
       end
     end
   end
 
   def show_hands
+    "Player's hand: #{player_hand}\nDealer's hand: #{dealer_hand}\n".colorize(:light_cyan) + 
+      (@wallet.show_bet).colorize(:yellow)
   end
 
   def set_result
+    if @player_hand.get_value > 21
+      @result = 'Player Busts!'.colorize(:red)
+    elsif @dealer_hand.get_value > 21
+      @result = 'Dealer Busts!'.colorize(:light_blue)
+    elsif @current_gamer == 'Dealer'
+      if @player_hand.get_value == @dealer_hand.get_value
+        @result = "It's a Tie!".colorize(:light_cyan)
+      elsif @player_hand.get_value > @dealer_hand.get_value
+        @result = "Player wins!".colorize(:light_blue)
+      elsif @player_hand.get_value < @dealer_hand.get_value
+        @result = "Dealer wins!".colorize(:red)
+      end
+    end
   end
 
   def split_cards
   end
 
   def play_again
-  end
-
-  def to_s
-    puts "Player has #{@player_hand.get_value}"
-    puts "Dealer has #{@dealer_hand.get_value}"
-    @wallet.show_amount
   end
 
   private #allow you to call another method inside a method of the same class
