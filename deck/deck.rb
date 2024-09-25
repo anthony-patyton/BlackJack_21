@@ -39,6 +39,18 @@ class Deck
     end
   end
 
+  def six_deck
+    5.times do
+      create_deck
+    end
+  end
+  
+  def eight_deck
+    7.times do
+      create_deck
+    end
+  end
+
   private
 
   def create_deck

@@ -46,6 +46,9 @@ class Hand
       report + "Total Value: " + get_value.to_s
     end
   end
+
+  def split_cards
+  end
 end
 
 # Phantom arrays 

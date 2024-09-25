@@ -2,7 +2,7 @@ require_relative '../hand/hand'
 require 'colorize'
 
 class Wallet
-  attr_reader :initial_amount
+  attr_reader :initial_amount, :history_bets
   attr_accessor :amount, :bet, :won_or_lost
   MINIMUM_BETS = [15, 25, 50, 500, 1000, 2500, 500000]
 
@@ -10,6 +10,7 @@ class Wallet
     @amount = initial_amount
     @bet = MINIMUM_BETS.first
     won_or_lost = ''
+    @history_bets = Array.new
   end
 
   def show_amount
@@ -21,6 +22,10 @@ class Wallet
     @amount = @amount + 3 * won_bet
   end
 
+  def return_money num
+    @amount = @amount + num
+  end
+
   def add_to_wallet won_bet
     @amount = @amount + 2 * won_bet
     won_or_lost = "You won #{@bet}!".colorize(:light_blue)
@@ -30,26 +35,18 @@ class Wallet
     @amount = @amount - lost_bet
   end
 
-  def lost_the_game
-    won_or_lost = "You lost #{@bet}".colorize(:red)
-  end
-  
   def change_bet num
-    if num % 5 == 0 && num <= MINIMUM_BETS.last
+    if num % 5 == 0 && num <= @amount
       @bet = num < 15 ? MINIMUM_BETS.first : num.to_i
       puts "Changed bet #{@bet}"
     else num >= MINIMUM_BETS.last
       @bet = MINIMUM_BETS.last
     end
+    
+    @history_bets << num
   end
 
   def show_bet 
-    if @bet < MINIMUM_BETS.last
-      "Your current bet: $#{@bet}"
-    elsif @bet >= MINIMUM_BETS.last
-      "Maximum bet is $#{MINIMUM_BETS.last}!!!"
-    else
-      "Your bet can only be increased by $5"
-    end
+    "Your current bet: $#{@bet}"
   end
 end

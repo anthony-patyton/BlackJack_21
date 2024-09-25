@@ -8,7 +8,6 @@ class Blackjack
 
   attr_reader :player_hand, :dealer_hand, :deck, :playing, :initial_amount
   attr_accessor :current_gamer, :change_bet, :bet, :wallet, :result
-  MINIMUM_BETS = [15, 25, 50, 500, 1000, 2500, 500000]
 
   def initialize suits, ranks, initial_amount
     @player_hand = nil
@@ -18,12 +17,11 @@ class Blackjack
     @deck.shuffle
     @playing = false
     @current_gamer = 'Player'
-    @bet = MINIMUM_BETS.first
     @result = ''
   end
 
   def deal
-    @wallet.subtract_from_wallet(@bet)
+    @wallet.subtract_from_wallet(@wallet.bet)
     @dealer_hand = Hand.new
     @player_hand = Hand.new
 
@@ -57,10 +55,10 @@ class Blackjack
       if @current_gamer == 'Player'
         @current_gamer = 'Dealer'
         @dealer_hand.dealt_cards.first.show = true
-        @playing = true
       end
-      if @dealer_hand.get_value <= 17
+      if @dealer_hand.get_value < 17 #need a method to see if the dealer hits a soft 17
         hit
+        stand
       end
     end
   end
@@ -72,24 +70,41 @@ class Blackjack
 
   def set_result
     if @player_hand.get_value > 21
-      @result = 'Player Busts!'.colorize(:red)
+      puts @result = 'Dealer Wins!'.colorize(:red)
+      @wallet.won_or_lost = "You lost #{@wallet.bet}!"
+      (@wallet.show_amount).colorize(:yellow)
     elsif @dealer_hand.get_value > 21
-      @result = 'Dealer Busts!'.colorize(:light_blue)
+      puts @result = 'Player wins!'.colorize(:light_blue)
+      @wallet.won_or_lost = "You won #{@wallet.bet}!"
+      puts @wallet.add_to_wallet(@wallet.bet)
+      (@wallet.show_amount).colorize(:yellow)
     elsif @current_gamer == 'Dealer'
       if @player_hand.get_value == @dealer_hand.get_value
-        @result = "It's a Tie!".colorize(:light_cyan)
+        puts @result = "It's a Tie!".colorize(:light_cyan)
+        puts @wallet.won_or_lost = "You didn't win anything".colorize(:light_cyan)
+        puts @wallet.return_money(@wallet.bet)
+        (@wallet.show_amount).colorize(:yellow)
       elsif @player_hand.get_value > @dealer_hand.get_value
-        @result = "Player wins!".colorize(:light_blue)
-      elsif @player_hand.get_value < @dealer_hand.get_value
-        @result = "Dealer wins!".colorize(:red)
+        puts @result = "Player wins!".colorize(:light_blue)
+        puts @wallet.add_to_wallet(@wallet.bet)
+        (@wallet.show_amount).colorize(:yellow)
+      else @player_hand.get_value < @dealer_hand.get_value
+        puts @result = "Dealer wins!".colorize(:red)
+        (@wallet.show_amount).colorize(:yellow)
       end
     end
   end
 
-  def split_cards
-  end
-
   def play_again
+    puts "Press enter to play again or type n(to exit)".upcase
+    option = gets.chomp.downcase
+    if option == ''
+      @current_gamer = 'Player'
+    elsif option == 'n'
+      exit
+    else
+      play_again
+    end
   end
 
   private #allow you to call another method inside a method of the same class
@@ -99,12 +114,10 @@ class Blackjack
 
     if hand.get_value > 21
       if current_gamer == 'Dealer'
-        @result = "#{@current_gamer} Busted"
-        @wallet.add_to_wallet(@bet)
-        @wallet.show_amount
+        puts @result = "#{@current_gamer} Busted"
         @playing = false
       elsif 
-        @result = "#{@current_gamer} Busted. You lost #{@bet}"
+        puts @result = "#{@current_gamer} Busted. You lost #{@wallet.bet}"
         @playing = false
       end
     end
