@@ -3,11 +3,13 @@ require_relative '../hand/hand'
 require_relative '../wallet/wallet'
 require 'colorize'
 require 'colorized_string'
+require 'pry'
 
 class Blackjack
 
-  attr_reader :player_hand, :dealer_hand, :deck, :playing, :initial_amount
-  attr_accessor :current_gamer, :change_bet, :bet, :wallet, :result
+  attr_reader :player_hand, :dealer_hand, :deck, :playing, :initial_amount 
+  attr_accessor :current_gamer, :change_bet, :bet, :wallet, :result, :create_deck
+  MINIMUM_BETS = 20
 
   def initialize suits, ranks, initial_amount
     @player_hand = nil
@@ -19,8 +21,14 @@ class Blackjack
     @current_gamer = 'Player'
     @result = ''
   end
-
+ 
   def deal
+    if @wallet.bet == nil
+      @wallet.bet = MINIMUM_BETS
+    elsif @wallet.amount < 0
+      puts "Your Broke" 
+      exit
+    end
     @wallet.subtract_from_wallet(@wallet.bet)
     @dealer_hand = Hand.new
     @player_hand = Hand.new
@@ -70,36 +78,43 @@ class Blackjack
 
   def set_result
     if @player_hand.get_value > 21
-      puts @result = 'Dealer Wins!'.colorize(:red)
-      @wallet.won_or_lost = "You lost #{@wallet.bet}!"
-      (@wallet.show_amount).colorize(:yellow)
+      @result = ("Player Busted! You Lost $#{@wallet.bet}!\n".colorize(:red) + @wallet.show_amount.colorize(:yellow))
     elsif @dealer_hand.get_value > 21
-      puts @result = 'Player wins!'.colorize(:light_blue)
-      @wallet.won_or_lost = "You won #{@wallet.bet}!"
-      puts @wallet.add_to_wallet(@wallet.bet)
-      (@wallet.show_amount).colorize(:yellow)
+      @wallet.add_to_wallet(@wallet.bet)
+      @result = ("Dealer busted. You won! #{@wallet.format_zeros(bet)}\n".colorize(:light_blue) + @wallet.show_amount.colorize(:yellow))
     elsif @current_gamer == 'Dealer'
       if @player_hand.get_value == @dealer_hand.get_value
-        puts @result = "It's a Tie!".colorize(:light_cyan)
-        puts @wallet.won_or_lost = "You didn't win anything".colorize(:light_cyan)
-        puts @wallet.return_money(@wallet.bet)
-        (@wallet.show_amount).colorize(:yellow)
-      elsif @player_hand.get_value > @dealer_hand.get_value
-        puts @result = "Player wins!".colorize(:light_blue)
-        puts @wallet.add_to_wallet(@wallet.bet)
-        (@wallet.show_amount).colorize(:yellow)
+        @wallet.return_money(@wallet.bet)
+        @result = ("It's a PUSH\n".colorize(:ligh_cyan) + @wallet.show_amount.colorize(:yellow))
+      elsif @player_hand.get_value > @dealer_hand.get_value && @player_hand.get_value != 21
+        @wallet.add_to_wallet(@wallet.bet)
+        @result = ("Player wins!\n".colorize(:light_blue) + @wallet.show_amount.colorize(:yellow))
+      elsif @player_hand.get_value == 21 && @dealer_hand.get_value != 21
+        @wallet.three_to_two(@wallet.bet)
+        @result = ("You won $#{@wallet.bet}\n".colorize(:magenta) + @wallet.show_amount.colorize(:magenta))
       else @player_hand.get_value < @dealer_hand.get_value
-        puts @result = "Dealer wins!".colorize(:red)
-        (@wallet.show_amount).colorize(:yellow)
+        @result = ("Dealer wins!\n".colorize(:red) + @wallet.show_amount.colorize(:yellow))
       end
     end
   end
+
+  def reshuffle 
+    if @deck.deck.size <= 20
+      @deck = Deck.new SUITS, RANKS
+      @deck.shuffle
+      "Shuffling deck"
+    else
+      "Same deck"
+    end
+  end
+
 
   def play_again
     puts "Press enter to play again or type n(to exit)".upcase
     option = gets.chomp.downcase
     if option == ''
       @current_gamer = 'Player'
+      reshuffle
     elsif option == 'n'
       exit
     else
@@ -114,10 +129,8 @@ class Blackjack
 
     if hand.get_value > 21
       if current_gamer == 'Dealer'
-        puts @result = "#{@current_gamer} Busted"
         @playing = false
-      elsif 
-        puts @result = "#{@current_gamer} Busted. You lost #{@wallet.bet}"
+      else
         @playing = false
       end
     end

@@ -1,4 +1,5 @@
-require 'pry'
+require 'colorize'
+
 class Hand
   attr_accessor :dealt_cards
 
@@ -47,7 +48,31 @@ class Hand
     end
   end
 
-  def split_cards
+  def pairs
+    values_of_ten = %w[10 Jack Queen King]
+    if dealt_cards.first.rank == dealt_cards.last.rank || values_of_ten.exclude?(dealt_cards.first.rank) || values_of_ten.exclude?(dealt_cards.last.rank) 
+      puts "Splitting Cards".colorize(:light_green)
+      hand1 = dealt_cards.pop
+      hand2 = dealt_cards.pop
+      split_cards(hand1, hand2)
+      binding.pry
+    else
+      false
+    end
+  end
+
+  def split_cards hand1, hand2
+    report = "#{hand1.to_s} Value: #{hand1.rank}\n  #{hand2.to_s} Value: #{hand2.rank}"
+
+    if hand1.show == false
+      first_value = VALUES[hand1.rank]
+      report + "Total Value: " + (get_value - first_value.to_s)
+    elsif hand2.show == false
+      second_value = VALUES[hand2.rank]
+      report + "Total Value: " + (get_value - second_value.to_s)
+    else
+      report + "Total Value: " + get_value.to_s
+    end
   end
 end
 

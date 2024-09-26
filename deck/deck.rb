@@ -51,6 +51,20 @@ class Deck
     end
   end
 
+  def which_deck
+    puts "How many decks do you want to play with 6 or 8 or a certain amount. Leave it empty to play 8"
+    deck_count = gets.strip.to_i
+    if deck_count == 0
+      eight_deck
+    elsif deck_count == 1
+      puts "Playing one deck"
+    elsif deck_count == 6
+      six_deck
+    else
+      add_deck(deck_count)
+    end
+  end
+
   private
 
   def create_deck

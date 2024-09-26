@@ -4,22 +4,25 @@ require 'colorize'
 class Wallet
   attr_reader :initial_amount, :history_bets
   attr_accessor :amount, :bet, :won_or_lost
-  MINIMUM_BETS = [15, 25, 50, 500, 1000, 2500, 500000]
+  MINIMUM_BETS = 20
 
   def initialize initial_amount
     @amount = initial_amount
-    @bet = MINIMUM_BETS.first
-    won_or_lost = ''
-    @history_bets = Array.new
+    @bet = MINIMUM_BETS
+    @history_bets = []
+  end
+
+  def format_zeros num
+    formated_zeros = num.to_s.reverse.gsub(/...(?=.)/,'\&,').reverse
   end
 
   def show_amount
-    "Wallet: $#{@amount}"
+    "Wallet: $#{format_zeros(@amount)}"
     # @amount.reduce(&:+).to_i
   end
 
-  def three_to_one
-    @amount = @amount + 3 * won_bet
+  def three_to_two won_bet
+    @amount = (@amount + ( 1.5 * won_bet)).to_i
   end
 
   def return_money num
@@ -28,25 +31,46 @@ class Wallet
 
   def add_to_wallet won_bet
     @amount = @amount + 2 * won_bet
-    won_or_lost = "You won #{@bet}!".colorize(:light_blue)
+    won_or_lost = "You won #{format_zeros(@bet)}!"
   end
 
-  def subtract_from_wallet lost_bet
-    @amount = @amount - lost_bet
+  def subtract_from_wallet bet
+    @amount = @amount - bet
   end
 
   def change_bet num
-    if num % 5 == 0 && num <= @amount
-      @bet = num < 15 ? MINIMUM_BETS.first : num.to_i
-      puts "Changed bet #{@bet}"
-    else num >= MINIMUM_BETS.last
-      @bet = MINIMUM_BETS.last
+    if num % 5 == 0 
+      @bet = num.to_i
+      @history_bets << num
+      puts "Changed bet #{format_zeros(@bet)}"
+    elsif num % 5 != 0
+      puts "Please type a correct bet divisible by 5."
+    else
+      puts "Your bets too high or your broke!".colorize(:red)
+      change_bet(gets.strip)
     end
-    
-    @history_bets << num
+  end
+
+  def winner_winner_chicken_dinner
+    puts "Would you like to increase bet? Type number to change bet"
+    puts "Leave empty for the same bet or the minimum bet $#{MINIMUM_BETS}?"
+    high_stakes = gets.strip.to_i
+    if high_stakes == 0
+      if @bet >= 15
+        @bet = @history_bets.last
+        "Same bet: #{@bet}"
+      else
+        @bet = MINIMUM_BETS
+      end
+    elsif high_stakes <= @amount
+      change_bet(high_stakes)
+    else
+      puts "Your bets too high!!! Or you're BROKE!!!".colorize(:red)
+      winner_winner_chicken_dinner
+    end
   end
 
   def show_bet 
-    "Your current bet: $#{@bet}"
+    "Your current bet: $#{format_zeros(@bet)}"
   end
 end
