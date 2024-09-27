@@ -7,12 +7,13 @@ hand = Hand.new
 puts "Players Hand:"
 hand.add_card(Card.new('Clubs', '8'))
 hand.add_card(Card.new('Hearts', '8'))
-puts hand
+if hand.pairs
+  hand.split_cards
+end
 
 puts "Dealers Hand:"
-hand2 = Hand.new
-hand2.add_card(Card.new('Hearts', 'Ace'))
-hand2.add_card(Card.new('Hearts', '7'))
-puts hand2
+dealer_hand = Hand.new
+dealer_hand.add_card(Card.new('Hearts', 'Ace'))
+dealer_hand.add_card(Card.new('Hearts', '7'))
 
-hand.pairs
+puts dealer_hand

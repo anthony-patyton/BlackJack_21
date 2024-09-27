@@ -1,7 +1,7 @@
 require 'colorize'
 
 class Hand
-  attr_accessor :dealt_cards
+  attr_accessor :dealt_cards 
 
   VALUES = {
     '2' => 2,
@@ -50,29 +50,33 @@ class Hand
 
   def pairs
     values_of_ten = %w[10 Jack Queen King]
-    if dealt_cards.first.rank == dealt_cards.last.rank || values_of_ten.exclude?(dealt_cards.first.rank) || values_of_ten.exclude?(dealt_cards.last.rank) 
-      puts "Splitting Cards".colorize(:light_green)
-      hand1 = dealt_cards.pop
-      hand2 = dealt_cards.pop
-      split_cards(hand1, hand2)
-      binding.pry
+    if @dealt_cards.first.rank == @dealt_cards.last.rank || values_of_ten.exclude?(dealt_cards.first.rank) && values_of_ten.exclude?(dealt_cards.last.rank) 
+      true
     else
       false
     end
   end
 
-  def split_cards hand1, hand2
-    report = "#{hand1.to_s} Value: #{hand1.rank}\n  #{hand2.to_s} Value: #{hand2.rank}"
+  def split_cards
+    puts "Splitting cards!".colorize(:lgiht_cyan)
+    report = ""
+    report_two = ""
+    @first_hand = Hand.new
+    @second_hand = Hand.new
+    @first_hand.dealt_cards.push(dealt_cards[0])
+    @second_hand.dealt_cards.push(dealt_cards[1])
+    @dealt_cards = []
+    @first_hand.dealt_cards.each { |card| report += card.to_s + ", " if card.show}
+    @second_hand.dealt_cards.each { |card| report_two += card.to_s + ", " if card.show}
 
-    if hand1.show == false
-      first_value = VALUES[hand1.rank]
-      report + "Total Value: " + (get_value - first_value.to_s)
-    elsif hand2.show == false
-      second_value = VALUES[hand2.rank]
-      report + "Total Value: " + (get_value - second_value.to_s)
+    if @first_hand.dealt_cards.first.show == true
+      first_value = VALUES[@first_hand.dealt_cards.first.rank]
+      report = (report + "Total Value: " + @first_hand.get_value.to_s)
+      report_two = (report_two + "Total Value: " + @second_hand.get_value.to_s)
     else
       report + "Total Value: " + get_value.to_s
     end
+    puts "#{report}\n#{report_two}"
   end
 end
 

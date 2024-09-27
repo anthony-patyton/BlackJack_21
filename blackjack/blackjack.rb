@@ -81,19 +81,20 @@ class Blackjack
       @result = ("Player Busted! You Lost $#{@wallet.bet}!\n".colorize(:red) + @wallet.show_amount.colorize(:yellow))
     elsif @dealer_hand.get_value > 21
       @wallet.add_to_wallet(@wallet.bet)
-      @result = ("Dealer busted. You won! #{@wallet.format_zeros(bet)}\n".colorize(:light_blue) + @wallet.show_amount.colorize(:yellow))
+      @result = ("Dealer busted. You won! $#{@wallet.bet}\n".colorize(:light_blue) + @wallet.show_amount.colorize(:yellow))
     elsif @current_gamer == 'Dealer'
       if @player_hand.get_value == @dealer_hand.get_value
         @wallet.return_money(@wallet.bet)
         @result = ("It's a PUSH\n".colorize(:ligh_cyan) + @wallet.show_amount.colorize(:yellow))
       elsif @player_hand.get_value > @dealer_hand.get_value && @player_hand.get_value != 21
         @wallet.add_to_wallet(@wallet.bet)
-        @result = ("Player wins!\n".colorize(:light_blue) + @wallet.show_amount.colorize(:yellow))
+        @result = ("Player wins! You won $#{@wallet.bet}\n".colorize(:light_blue) + @wallet.show_amount.colorize(:yellow))
       elsif @player_hand.get_value == 21 && @dealer_hand.get_value != 21
         @wallet.three_to_two(@wallet.bet)
-        @result = ("You won $#{@wallet.bet}\n".colorize(:magenta) + @wallet.show_amount.colorize(:magenta))
+        amount = (1.5 * @wallet.bet).to_i
+        @result = ("You won $#{amount}\n".colorize(:magenta) + @wallet.show_amount.colorize(:magenta))
       else @player_hand.get_value < @dealer_hand.get_value
-        @result = ("Dealer wins!\n".colorize(:red) + @wallet.show_amount.colorize(:yellow))
+        @result = ("Dealer wins! You Lost $#{@wallet.bet}\n".colorize(:red) + @wallet.show_amount.colorize(:yellow))
       end
     end
   end
