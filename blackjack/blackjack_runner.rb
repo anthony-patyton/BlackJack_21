@@ -33,12 +33,16 @@ while @game.current_gamer == 'Player'
   puts @game.show_hands
 
   while @game.player_hand.get_value <= 21 do
-    if check_player_hands
-      #got a blackjack
+    if check_player_hands # got a blackjack
       @game.stand
       puts ColorizedString["Player Hand: " + @game.player_hand.to_s].colorize(:light_green)
       puts ColorizedString["Dealer Hand: " + @game.dealer_hand.to_s].colorize(:light_cyan)
       break
+    elsif @game.player_hand.pairs
+      if @game.check_input
+        puts @game.show_hands
+      else
+      end
     else
       puts "Do you want to Hit(1) or Stand(2)?"
       res = gets.strip
