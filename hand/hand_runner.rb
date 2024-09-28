@@ -7,9 +7,6 @@ hand = Hand.new
 puts "Players Hand:"
 hand.add_card(Card.new('Clubs', '8'))
 hand.add_card(Card.new('Hearts', '8'))
-if hand.pairs
-  hand.split_cards
-end
 
 puts "Dealers Hand:"
 dealer_hand = Hand.new
