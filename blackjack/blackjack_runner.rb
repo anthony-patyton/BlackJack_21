@@ -79,9 +79,8 @@ def set_two_results
                 @result = ("You won 0.5x $#{@game.wallet.bet} and PUSH the other hand\n" + @game.wallet.show_amount.colorize(:yellow))
               end
             else
-              2.times do
-                @game.wallet.three_to_two(@game.wallet.bet)
-              end
+              @game.wallet.three_to_two(@game.wallet.bet)
+              @game.wallet.three_to_two(@game.wallet.bet)
               @result = ("You won 3x $#{@game.wallet.bet}\n" + @game.wallet.show_amount.colorize(:yellow))
             end
           end
@@ -101,7 +100,7 @@ def set_two_results
           end
         else
           #same value
-          unless value != 21
+          unless value == 21
             if value > dealer
               @game.wallet.add_to_wallet(@game.wallet.bet)
               @result = ("You didn't really win anything\n".colorize(:light_cyan) + @game.wallet.show_amount.colorize(:yellow))
@@ -211,9 +210,9 @@ while @game.current_gamer == 'Player'
   end
   @game.wallet.winner_winner_chicken_dinner
   @game.deal
-  @game.player_hand.dealt_cards = []
-  @game.player_hand.dealt_cards.push(Card.new('Hearts', 'Ace'))
-  @game.player_hand.dealt_cards.push(Card.new('Clubs', 'Ace'))
+  # @game.player_hand.dealt_cards = []
+  # @game.player_hand.dealt_cards.push(Card.new('Hearts', 'Ace'))
+  # @game.player_hand.dealt_cards.push(Card.new('Clubs', 'Ace'))
 
   puts @game.show_hands
 
