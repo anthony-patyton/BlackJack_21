@@ -30,6 +30,10 @@ while @game.current_gamer == 'Player'
   end
   @game.wallet.winner_winner_chicken_dinner
   @game.deal
+  # @game.player_hand.dealt_cards = []
+  # @game.player_hand.dealt_cards.push(Card.new('Clubs', 'Ace'))
+  # @game.player_hand.dealt_cards.push(Card.new('Hearts', 'Ace'))
+
   puts @game.show_hands
 
   while @game.player_hand.get_value <= 21 do
@@ -39,9 +43,44 @@ while @game.current_gamer == 'Player'
       puts ColorizedString["Dealer Hand: " + @game.dealer_hand.to_s].colorize(:light_cyan)
       break
     elsif @game.player_hand.pairs
-      if @game.check_input
+      unless @game.check_input == false
+        puts "Splitting hands!".colorize(:yellow)
         puts @game.show_hands
+        while @game.current_hand == false do
+          puts "Do you want to Hit(1) or Stand(2)? Second_hand"
+          res = gets.strip
+          if res == '1'
+            puts
+            @game.hit
+            puts ColorizedString["Player Second Hand: " + @game.player_second_hand.to_s].colorize(:light_green)
+            puts ColorizedString["Player First Hand: " + @game.player_hand.to_s].colorize(:light_green)
+            puts ColorizedString["Dealer Hand: " + @game.dealer_hand.to_s].colorize(:light_cyan)
+          else res == '2'
+            puts
+            @game.stand
+            puts ColorizedString["Player Second Hand: " + @game.player_second_hand.to_s].colorize(:light_green)
+            puts ColorizedString["Player First Hand: " + @game.player_hand.to_s].colorize(:light_green)
+            puts ColorizedString["Dealer Hand: " + @game.dealer_hand.to_s].colorize(:light_cyan)
+            break
+          end
+        end
       else
+        puts "Do you want to Hit(1) or Stand(2)? First_hand"
+        res = gets.strip
+        if res == '1'
+          puts
+          @game.hit
+          puts ColorizedString["Player Second Hand: " + @game.player_second_hand.to_s].colorize(:light_green)
+          puts ColorizedString["Player First Hand: " + @game.player_hand.to_s].colorize(:light_green)
+          puts ColorizedString["Dealer Hand: " + @game.dealer_hand.to_s].colorize(:light_cyan)
+        else res == '2'
+          puts
+          @game.stand
+          puts ColorizedString["Player Second Hand: " + @game.player_second_hand.to_s].colorize(:light_green)
+          puts ColorizedString["Player First Hand: " + @game.player_hand.to_s].colorize(:light_green)
+          puts ColorizedString["Dealer Hand: " + @game.dealer_hand.to_s].colorize(:light_cyan)
+          break
+        end
       end
     else
       puts "Do you want to Hit(1) or Stand(2)?"

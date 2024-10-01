@@ -3,12 +3,13 @@ require 'colorize'
 
 class Wallet
   attr_reader :initial_amount, :history_bets
-  attr_accessor :amount, :bet, :won_or_lost
+  attr_accessor :amount, :bet, :second_bet, :won_or_lost
   MINIMUM_BETS = 20
 
   def initialize initial_amount
     @amount = initial_amount
     @bet = MINIMUM_BETS
+    @second_bet = nil
     @history_bets = []
   end
 
@@ -31,7 +32,7 @@ class Wallet
 
   def add_to_wallet won_bet
     @amount = @amount + 2 * won_bet
-    won_or_lost = "You won #{format_zeros(@bet)}!"
+    won_or_lost = "You won #{format_zeros(won_bet)}!"
   end
 
   def subtract_from_wallet bet

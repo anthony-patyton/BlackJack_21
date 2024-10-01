@@ -50,10 +50,12 @@ class Hand
 
   def pairs
     value_of_card = VALUES[@dealt_cards.first.rank]
-    if @dealt_cards.first.rank == @dealt_cards.last.rank && value_of_card != 10
-      true
-    else
-      false
+    if @dealt_cards.count == 2 
+      if @dealt_cards.first.rank == @dealt_cards[1].rank && value_of_card != 10
+        true
+      else
+        false
+      end
     end
   end
 end
