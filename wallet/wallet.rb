@@ -31,8 +31,7 @@ class Wallet
   end
 
   def add_to_wallet won_bet
-    @amount = @amount + 2 * won_bet
-    won_or_lost = "You won #{format_zeros(won_bet)}!"
+    @amount = @amount + (2 * won_bet)
   end
 
   def subtract_from_wallet bet
