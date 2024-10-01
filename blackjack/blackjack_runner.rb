@@ -94,6 +94,9 @@ while @game.current_gamer == 'Player'
   end
   @game.wallet.winner_winner_chicken_dinner
   @game.deal
+  @game.player_hand.dealt_cards = []
+  @game.player_hand.dealt_cards.push(Card.new('Hearts', 'Ace'))
+  @game.player_hand.dealt_cards.push(Card.new('Clubs', 'Ace'))
 
   puts @game.show_hands
 

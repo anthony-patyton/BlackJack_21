@@ -137,9 +137,10 @@ class Blackjack
     else
       value2 = @player_second_hand.get_value
       value = @player_hand.get_value
+      dealer = @dealer_hand.get_value
       if value2 > 21 && value > 21
         @result = ("\nYou Lost 2x your bet. #{@wallet.bet}/hand\n".colorize(:red) + @wallet.show_amount.colorize(:yellow))
-      elsif @dealer_hand.get_value > 21
+      elsif dealer > 21 && value2 <= 21 && value <= 21
         if value2 < 21 && value < 21
           @wallet.add_to_wallet(@wallet.bet)
           @wallet.add_to_wallet(@wallet.second_bet)
@@ -150,56 +151,104 @@ class Blackjack
           end
           amount = (1.5 * @wallet.bet).to_i
           @result = ("\nYou won 2x $#{amount}\n".colorize(:magenta) + @wallet.show_amount.colorize(:magenta))
-        elsif value2 == 21 && value != 21 || value2 != 21 && value == 21
+        else
           @wallet.three_to_two(@wallet.bet)
           @wallet.add_to_wallet(@wallet.bet)
           @result = ("\nYou won 1.5x your $#{@wallet.bet} && you won $#{@wallet.second_bet}\n".colorize(:light_blue) + @wallet.show_amount.colorize(:yellow))
         end
       elsif @current_gamer == 'Dealer'
-        if value2 == @dealer_hand.get_value && value == @dealer_hand.get_value
-          2.times do
-            @wallet.return_money(@wallet.bet)
-          end
-          @result = ("\nYou PUSH both hands\n".colorize(:ligh_cyan) + @wallet.show_amount.colorize(:yellow))
-        elsif value2 < @dealer_hand.get_value && value < @dealer_hand.get_value
-          @result = ("\nDealer wins! You Lost 2x $#{@wallet.bet}\n".colorize(:red) + @wallet.show_amount.colorize(:yellow))
-        elsif value2 == @dealer_hand.get_value || value == @dealer_hand.get_value 
-          #if either one is the same as the dealer see which one lost an won
-          if value2 == @dealer_hand.get_value && value > @dealer_hand.get_value
-            @wallet.return_money(@wallet.bet)
-            @wallet.add_to_wallet(@wallet.bet)
-            @result = ("\nYou won $#{@wallet.bet} and PUSH the other hand\n".colorize(:light_blue) + @wallet.show_amount.colorize(:yellow))
-          elsif value2 > @dealer_hand.get_value && value == @dealer_hand.get_value
-            @wallet.return_money(@wallet.bet)
-            @wallet.add_to_wallet(@wallet.bet)
-            @result = ("\nYou won $#{@wallet.bet} and PUSH the other hand\n".colorize(:light_blue) + @wallet.show_amount.colorize(:yellow))
-          elsif value2 < @dealer_hand.get_value && value == @dealer_hand.get_value
-            @wallet.return_money(@wallet.bet)
-            @result = ("\nYou lost $#{@wallet.bet} and PUSH the other hand\n".colorize(:light_blue) + @wallet.show_amount.colorize(:yellow))
+        if value == dealer && value2 == dealer
+          @wallet.return_money(@wallet.bet)
+          @wallet.return_money(@wallet.bet)
+          @result = ("You PUSH both hands\n".colorize(:ligh_cyan) + @wallet.show_amount.colorize(:yellow))
+        elsif value < dealer && value2 < dealer 
+          @result = ("\nYou Lost 2x your bet. #{@wallet.bet}/hand\n".colorize(:red) + @wallet.show_amount.colorize(:yellow))
+        else
+          unless value2 > 21 || value > 21
+            if value2 > dealer 
+              unless value2 == 21 
+                unless value == 21
+                  if value > dealer
+                    @wallet.add_to_wallet(@wallet.bet)
+                    @wallet.add_to_wallet(@wallet.second_bet)
+                    @result = ("\nYou won 2x $#{@wallet.bet}\n" + @wallet.show_amount.colorize(:yellow))
+                  elsif value == dealer
+                    @wallet.return_money(@wallet.bet)
+                    @wallet.add_to_wallet(@wallet.bet)
+                    @result = ("\nYou won $#{@wallet.bet}\n" + @wallet.show_amount.colorize(:yellow))
+                  else #value < dealer
+                    @wallet.add_to_wallet(@wallet.second_bet)
+                    @result = ("\nYou didn't really win anyting!\n" + @wallet.show_amount.colorize(:yellow))
+                  end
+                else
+                  @wallet.three_to_two(@wallet.bet)
+                  @wallet.add_to_wallet(@wallet.second_bet)
+                  @result = ("You won 3x $#{@wallet.bet}!\n" + @wallet.show_amount.colorize(:yellow))
+                end
+              else
+                unless value == 21
+                  if value > dealer
+                    @wallet.add_to_wallet(@wallet.bet)
+                    @wallet.add_to_wallet(@wallet.second_bet)
+                    @result = ("You 2x $#{@wallet.bet}\n" + @wallet.show_amount.colorize(:yellow))
+                  elsif value < dealer
+                    @wallet.three_to_two(@wallet.second_bet)
+                    @result = ("You won 0.5x $#{@wallet.second_bet}\n".colorize(:light_cyan) + @wallet.show_amount.colorize(:yellow))
+                  else
+                    @wallet.return_money(@wallet.bet)
+                    @result = ("You won 0.5x $#{@wallet.second_bet} and PUSH the other hand\n" + @wallet.show_amount.colorize(:yellow))
+                  end
+                else
+                  2.times do
+                    @wallet.add_to_wallet(@wallet.bet)
+                  end
+                  @result = ("You won 3x $#{@wallet.bet}\n" + @wallet.show_amount.colorize(:yellow))
+                end
+              end
+            elsif value2 < dealer
+              unless value != 21
+                if value == dealer
+                  @wallet.return_money(@wallet.bet)
+                  @result = ("\nYou Lost $#{@wallet.second_bet}" + @wallet.show_amount.colorize(:yellow))
+                else #value > dealer
+                  @wallet.add_to_wallet(@wallet.bet)
+                  @result = ("\nYou Won $#{@wallet.bet}" + @wallet.show_amount.colorize(:yellow))
+                end
+              else
+                @wallet.three_to_two(@wallet.bet)
+                amount = (1.5 * @wallet.bet).to_i
+                @result = ("\nYou won $#{amount}! You Lost $#{@wallet.second_bet}\n" + @wallet.show_amount.colorize(:yellow))
+              end
+            else
+              #same value
+              unless value != 21
+                if value > dealer
+                  @wallet.add_to_wallet(@wallet.bet)
+                  @result = ("You didn't really win anything\n".colorize(:light_cyan) + @wallet.show_amount.colorize(:yellow))
+                else 
+                  @result = ("\nYou Lost $#{@wallet.bet}" + @wallet.show_amount.colorize(:yellow)) # value2 == dealer
+                end
+              else
+                @wallet.three_to_two(@wallet.bet)
+                amount = (1.5 * @wallet.bet).to_i
+                @result = ("\nYou won $#{amount}! And Push $#{@wallet.second_bet}\n" + @wallet.show_amount.colorize(:yellow))
+              end
+            end
           else
-            #value2 == dealer && value < dealer hand
-            @wallet.return_money(@wallet.bet)
-            @result = ("\nYou lost $#{@wallet.bet} and PUSH the other hand\n".colorize(:light_blue) + @wallet.show_amount.colorize(:yellow))
+            unless value != 21
+              if value == dealer
+                @wallet.return_money(@wallet.bet)
+                @result = ("\nYou Lost $#{@wallet.second_bet}" + @wallet.show_amount.colorize(:yellow))
+              else #value > dealer
+                @wallet.add_to_wallet(@wallet.bet)
+                @result = ("\nYou only Won $#{@wallet.bet}" + @wallet.show_amount.colorize(:yellow))
+              end
+            else
+              @wallet.three_to_two(@wallet.bet)
+              amount = (1.5 * @wallet.bet).to_i
+              @result = ("\nYou won $#{amount}! And You Lost $#{@wallet.second_bet}!\n" + @wallet.show_amount.colorize(:yellow))
+            end
           end
-        elsif value2 == 21 && value == 21 && @dealer_hand.get_value != 21
-          if @dealer_hand.get_value != 21 
-            @wallet.three_to_two(@wallet.bet)
-            @wallet.three_to_two(@wallet.second_bet)
-            amount = (1.5 * @wallet.bet).to_i
-            @result = ("\nYou won 2x $#{amount}\n".colorize(:magenta) + @wallet.show_amount.colorize(:magenta))
-          elsif value2 == 21 && value != 21 || value2 != 21 && value == 21
-            @wallet.three_to_two(@wallet.bet)
-            @wallet.add_to_wallet(@wallet.bet)
-            amount = (1.5 * @wallet.bet).to_i
-            @result = ("\nYou won $#{amount} and $#{@wallet.bet}\n" + @wallet.show_amount.colorize(:yellow))
-          else
-            @wallet.add_to_wallet(@wallet.bet)
-            @wallet.add_to_wallet(@wallet.second_bet)
-            @result = ("\nYou won 2x $#{@wallet.bet}\n".colorize(:light_blue) + @wallet.show_amount.colorize(:yellow))
-          end
-        else #value2 > @dealer_hand.get_value && value < @dealer_hand.get_value || value2 < @dealer_hand.get_value && value > @dealer_hand.get_value
-          @wallet.add_to_wallet(@wallet.bet)
-          @result = ("\nYou really did't really win anything!\n".colorize(:light_white) + @wallet.show_amount.colorize(:yellow))
         end
       end
     end
@@ -215,8 +264,7 @@ class Blackjack
     end
   end
 
-
-  def play_again
+def play_again
     puts "Press enter to play again or type n(to exit)".upcase
     option = gets.chomp.downcase
     if option == ''
